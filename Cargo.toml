@@ -1,0 +1,11 @@
+[package]
+name = "SavedTodo"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+crossterm = "0.29.0"
+toml = "0.8.22"
+serde = { version = "1.0.219", features = ["derive"] }
+press-btn-continue = "0.2.0"
+colored = "3.0.0"
