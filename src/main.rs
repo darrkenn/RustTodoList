@@ -1,11 +1,10 @@
 use std::{fs, io, process};
 use std::fs::{File, };
-use std::io::{Read, Write, stdout};
+use std::io::{stdout};
 use std::path::Path;
 use serde::{Serialize, Deserialize};
 use crossterm::{execute,cursor, terminal::{Clear, ClearType} };
 use press_btn_continue;
-use colored::*;
 use crossterm::style::Stylize;
 
 const FILENAME: &str = "todo.toml";
