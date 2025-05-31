@@ -1,3 +1,5 @@
 /target
 todo.toml
 .idea
+.gitignore
+Cargo.lock
