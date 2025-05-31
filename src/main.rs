@@ -24,7 +24,7 @@ fn main(){
     check();
     let todo_list = fs::read_to_string(FILENAME).expect("Unable to read file");
     let mut notebook: Notebook = toml::from_str(&todo_list).expect("Error parsing file");
-    println!("{}", Stylize::cyan("MY NOTEBOOK BRUH").bold());
+    println!("{}", Stylize::cyan("To-Do List").bold());
     loop {
         list_of_options();
         let choice = handle_choice();
