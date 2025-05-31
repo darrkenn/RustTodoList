@@ -5,11 +5,13 @@ use std::path::Path;
 use comfy_table::modifiers::UTF8_ROUND_CORNERS;
 use comfy_table::presets::UTF8_FULL;
 use serde::{Serialize, Deserialize};
-use crossterm::{execute,cursor, terminal::{Clear, ClearType} };
 use press_btn_continue;
-use crossterm::style::Stylize;
 use comfy_table::{Attribute, ContentArrangement, Table};
 use comfy_table::*;
+use crossterm::{execute,cursor};
+use crossterm::style::Stylize;
+use crossterm::terminal::{Clear, ClearType};
+
 const FILENAME: &str = "todo.toml";
 //Struct for Taskbook which has a vector containing the struct for a task.
 #[derive(Deserialize, Serialize, Clone)]
@@ -30,7 +32,7 @@ fn main(){
     It then parses the TOML string into the struct Taskbook.*/
     let todo_list = fs::read_to_string(FILENAME).expect("Unable to read file");
     let mut taskbook: Taskbook = toml::from_str(&todo_list).expect("Error parsing file");
-
+    
     loop {
         println!("{}", Stylize::cyan("To-Do List").bold());
         list_of_options();
@@ -128,9 +130,9 @@ fn handle_complete() -> bool {
         io::stdin().read_line(&mut complete).expect("Error reading line");
         let complete = complete.trim().to_string().to_lowercase();
         //Checks if complete is either yes or no. Returns with respective outcome.
-        if complete == "yes" || complete == "y" {
+        if complete == "yes" || complete == "y" || complete == "true" {
             break true;
-        } else if complete == "no" || complete == "n" {
+        } else if complete == "no" || complete == "n" || complete == "false" {
             break false;
         } else {
             println!("{} is Not a valid option (y/n)", complete);
@@ -208,7 +210,7 @@ fn change_completion(taskbook: &mut Taskbook) {
             println!("Which note would you like to change? (0) to exit");
             let choice = handle_choice();
             //Checks if choice is greater than 0 and less than length of taskbook.tasks.
-            if choice > 0 && choice <  taskbook.tasks.len() as u32 {
+            if choice > 0 && choice <  taskbook.tasks.len() as u32 + 1 {
                 println!("Now changing task {}", choice);
                 let usize_choice = choice as usize - 1;
                 //Changledcompletition is then pushed to the vector taskbook.tasks based on the users choice.
@@ -224,3 +226,5 @@ fn change_completion(taskbook: &mut Taskbook) {
         }
     }
 }
+
+
