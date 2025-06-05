@@ -4,7 +4,6 @@ use std::{fs};
 use serde::{Serialize, Deserialize};
 use crossterm::{event};
 use color_eyre::eyre::Result;
-use color_eyre::owo_colors::OwoColorize;
 use crossterm::event::{Event, KeyEvent, KeyEventKind};
 use ratatui::{DefaultTerminal, Frame};
 use ratatui::layout::{Constraint, Flex, Layout, Rect};
@@ -133,22 +132,14 @@ fn handle_guide(key: KeyEvent) -> bool {
     if key.kind != KeyEventKind::Press {
         return true;
     }
-    return match key.code {
+    match key.code {
         event::KeyCode::Tab => { false }
 
         _ => { true }
     }
 }
-fn handle_information(key: KeyEvent) -> bool {
-    if key.kind != KeyEventKind::Press {
-        return true;
-    }
-    return match key.code {
-        event::KeyCode::Tab => { false }
 
-        _ => { true }
-    }
-}
+
 
 fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
     if key.kind != KeyEventKind::Press {
