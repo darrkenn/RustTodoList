@@ -69,7 +69,7 @@ pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
     let tasklist = List::new(tasks)
         .highlight_symbol(">> ")
         .highlight_spacing(HighlightSpacing::Always)
-        .highlight_style(Style::default());
+        .highlight_style(Style::default().white());
 
     if taskbook.is_add_new_task {
         new_task_render(taskbook,frame,chunks[1]);
@@ -77,7 +77,18 @@ pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
         guide_render(frame, chunks[1]);
     }
 
+
+
     frame.render_stateful_widget(tasklist, inner_area, &mut taskbook.task_state);
+}
+
+fn task_area_render(area: Rect, percent_x: u16, percent_y: u16) -> Rect {
+    //Calculation for popup to be centered
+    let vertical = Layout::vertical([Constraint::Percentage(percent_y)]).flex(Flex::Center);
+    let horizontal = Layout::horizontal([Constraint::Percentage(percent_x)]).flex(Flex::Center);
+    let [area] = vertical.areas(area);
+    let [area] = horizontal.areas(area);
+    area
 }
 
 fn popup_area(area: Rect, percent_x: u16, percent_y: u16) -> Rect {
@@ -95,11 +106,11 @@ fn new_task_render(taskbook: &mut Taskbook, frame: &mut Frame, chunk_area: Rect)
     let block = Block::bordered()
         .border_style(Style::default().fg(Color::White))
         .title_style(Color::Cyan)
-        .style(Style::default().fg(Color::Green))
+        .style(Style::default().fg(Color::White))
         .title_bottom(Line::from("Quit(Tab) Save(Enter)").centered())
         .title(Line::from("Enter title").centered());
     //Epands area based on length of text
-    let mut input_y = 10;
+    let mut input_y = 7;
     if taskbook.input_title.len() > 58 {
         input_y += 5;
     } else {

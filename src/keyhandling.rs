@@ -40,6 +40,12 @@ pub fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
             's' | 'S' => {
                 taskbook.task_state.select_next();
             }
+            'q' | 'Q' => {
+                taskbook.task_state.select_first();
+            }
+            'e' | 'E' => {
+                taskbook.task_state.select_last();
+            }
             _ => {}
         }
         _ => {}
