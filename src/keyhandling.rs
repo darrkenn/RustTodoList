@@ -19,7 +19,7 @@ pub fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
         event::KeyCode::Up => {taskbook.task_state.select_previous()},
         event::KeyCode::Down => {taskbook.task_state.select_next()},
         event::KeyCode::Char(char) => match char {
-            'n' | 'N' => {
+            'n' | 'N'  => {
                 taskbook.is_add_new_task = true;
             }
             'g' | 'G' => {
@@ -57,9 +57,9 @@ pub fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
 
 
 pub fn handle_new(key: KeyEvent, taskbook: &mut Taskbook) {
-    if key.kind != KeyEventKind::Press {
-        taskbook.is_add_new_task = false;
-    }
+    // if key.kind != KeyEventKind::Press {
+    //     taskbook.is_add_new_task = false;
+    // }
     match handle_new_task(key, taskbook) {
         TaskAction::Submit => {
             if taskbook.input_title.is_empty() {

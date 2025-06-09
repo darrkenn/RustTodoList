@@ -4,6 +4,7 @@ use ratatui::prelude::Direction;
 use ratatui::style::{Color, Modifier, Style, Stylize};
 use ratatui::widgets::{Block, BorderType, HighlightSpacing, List, ListItem, Padding, Paragraph, Widget, Clear, Wrap};
 use ratatui::text::{Line};
+use unicode_width::UnicodeWidthStr;
 use crate::Taskbook;
 
 const OPTIONS: [&str; 8] = [
@@ -56,13 +57,21 @@ pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
                     .fg(Color::Red)
                     .add_modifier(Modifier::BOLD)
             };
-            let is_complete = if task.complete {
-                "[*]"
+            let is_complete = if task.complete { "[*]"
             } else {
                 "[ ]"
             };
-            let complete = format!("{} {}",is_complete,task.title);
-            ListItem::from(complete).style(style)
+
+            let max = inner_area.width.saturating_sub(11) as usize;
+
+            let length_title = if task.title.width() > max {
+                format!("{}...", &task.title.chars().take(max.saturating_sub(3)).collect::<String>())
+            } else {
+                task.title.clone().to_string()
+            };
+
+            let final_item = format!("{} {}",is_complete,length_title);
+            ListItem::from(final_item).style(style)
         })
         .collect();
 
