@@ -15,6 +15,13 @@ pub fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
             if let Some(index) = taskbook.task_state.selected() {
                 taskbook.tasks[index].complete = true;
             }
+            write_file(&taskbook).expect("Err");
+        }
+        event::KeyCode::Backspace => {
+            if let Some(index) = taskbook.task_state.selected() {
+                taskbook.tasks[index].complete = false;
+            }
+            write_file(&taskbook).expect("Err");
         }
         event::KeyCode::Up => {taskbook.task_state.select_previous()},
         event::KeyCode::Down => {taskbook.task_state.select_next()},
@@ -30,6 +37,9 @@ pub fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
                 if let Some(index) = taskbook.task_state.selected() {
                     taskbook.tasks.remove(index);
                 }
+            }
+            'i' | 'I' => {
+                taskbook.is_information = true;
             }
             'c' | 'C' => {
                 write_file(&taskbook).expect("Err")
@@ -52,14 +62,7 @@ pub fn handle_key(key:KeyEvent, taskbook: &mut Taskbook) -> bool{
     }
     false
 }
-
-
-
-
 pub fn handle_new(key: KeyEvent, taskbook: &mut Taskbook) {
-    // if key.kind != KeyEventKind::Press {
-    //     taskbook.is_add_new_task = false;
-    // }
     match handle_new_task(key, taskbook) {
         TaskAction::Submit => {
             if taskbook.input_title.is_empty() {
@@ -82,6 +85,7 @@ pub fn handle_save_task(taskbook: &mut Taskbook) {
         complete: false,
     });
     taskbook.input_title.clear();
+    write_file(&taskbook).expect("Err");
 }
 pub fn exit_save_task(taskbook: &mut Taskbook) {
     taskbook.is_add_new_task = false;
@@ -92,6 +96,12 @@ pub fn handle_guide_mode(key: KeyEvent, taskbook: &mut Taskbook) {
         taskbook.is_guide = false;
     }
 }
+pub fn handle_information_mode(key: KeyEvent, taskbook: &mut Taskbook) {
+    if !handle_information(key) {
+        taskbook.is_information = false;
+    }
+}
+
 
 pub fn handle_new_task(key: KeyEvent, taskbook: &mut Taskbook) -> TaskAction {
     //Checks if keyevenykind isnt a press
@@ -125,3 +135,15 @@ pub fn handle_guide(key: KeyEvent) -> bool {
         _ => { true }
     }
 }
+
+pub fn handle_information(key: KeyEvent) -> bool {
+    if key.kind != KeyEventKind::Press {
+        return true;
+    }
+    match key.code {
+        event::KeyCode::Tab => { false }
+
+        _ => { true }
+    }
+}
+

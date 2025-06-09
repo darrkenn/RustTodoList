@@ -1,7 +1,7 @@
 # Rust Todo List
 
 This is a **minimal** and **fast** TUI todo-list built in rust. Built using ratatui and crossterm.
-
+![](tui_Animation.gif)
 ## Features
 - Basic features like Add/Change/Delete/Save.
 - Tasks are saved locally via **TOML**.

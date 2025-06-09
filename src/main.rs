@@ -24,6 +24,8 @@ struct Taskbook {
     input_title: String,
     #[serde(skip)]
     is_guide: bool,
+    #[serde(skip)]
+    is_information: bool,
 }
 // Struct for a single task
 #[derive(Deserialize, Serialize, Clone, Debug)]

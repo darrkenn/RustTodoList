@@ -7,12 +7,13 @@ use ratatui::text::{Line};
 use unicode_width::UnicodeWidthStr;
 use crate::Taskbook;
 
-const OPTIONS: [&str; 8] = [
-"New task (n)", "Delete Task (d)",
-"Up (w)", "Down (s)",
-"Save (c)",
-"Complete task (Enter)",
-"Back (Tab)", "Exit (Esc)"
+const OPTIONS: [&str; 10] = [
+    "New task (n)", "Delete Task (d)",
+    "Up (w)", "Down (s)",
+    "First (q)", "Last (e)",
+    "Save (c)",
+    "Complete task (Enter)",
+    "Back (Tab)", "Exit (Esc)"
 ];
 
 pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
@@ -35,7 +36,7 @@ pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
     Block::bordered()
         .border_type(BorderType::Rounded)
         .border_style(Style::default().fg(Color::White))
-        .title_style(Color::Cyan)
+        .title_style(Color::Yellow)
         .title(Line::from("RusTuiList").centered())
         .title_bottom(Line::from("New(n)").centered())
         .title_bottom(Line::from("Guide(g)").centered())
@@ -70,8 +71,7 @@ pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
                 task.title.clone().to_string()
             };
 
-            let final_item = format!("{} {}",is_complete,length_title);
-            ListItem::from(final_item).style(style)
+            ListItem::from(format!("{} {}",is_complete,length_title)).style(style)
         })
         .collect();
 
@@ -84,20 +84,11 @@ pub fn render(frame: &mut Frame, taskbook: &mut Taskbook) {
         new_task_render(taskbook,frame,chunks[1]);
     } else if taskbook.is_guide {
         guide_render(frame, chunks[1]);
+    } else if taskbook.is_information {
+        information_render(frame, chunks[1]);
     }
-
-
-
+    
     frame.render_stateful_widget(tasklist, inner_area, &mut taskbook.task_state);
-}
-
-fn task_area_render(area: Rect, percent_x: u16, percent_y: u16) -> Rect {
-    //Calculation for popup to be centered
-    let vertical = Layout::vertical([Constraint::Percentage(percent_y)]).flex(Flex::Center);
-    let horizontal = Layout::horizontal([Constraint::Percentage(percent_x)]).flex(Flex::Center);
-    let [area] = vertical.areas(area);
-    let [area] = horizontal.areas(area);
-    area
 }
 
 fn popup_area(area: Rect, percent_x: u16, percent_y: u16) -> Rect {
@@ -114,7 +105,7 @@ fn new_task_render(taskbook: &mut Taskbook, frame: &mut Frame, chunk_area: Rect)
     let input_title = Paragraph::new(taskbook.input_title.as_str()).centered().wrap(Wrap { trim: true });
     let block = Block::bordered()
         .border_style(Style::default().fg(Color::White))
-        .title_style(Color::Cyan)
+        .title_style(Color::Yellow)
         .style(Style::default().fg(Color::White))
         .title_bottom(Line::from("Quit(Tab) Save(Enter)").centered())
         .title(Line::from("Enter title").centered());
@@ -135,16 +126,35 @@ fn guide_render(frame: &mut Frame, chunk_area: Rect) {
     let block = Block::bordered()
         .padding(Padding::uniform(1))
         .border_style(Color::White)
-        .title_style(Color::Cyan)
+        .title_style(Color::Yellow)
         .title(Line::from("Guide").centered()).cyan()
         .title_bottom(Line::from("Back(tab)").centered());
 
     let list = List::new(OPTIONS)
-        .block(block).bold().green();
+        .block(block).bold().white();
 
-    let area = popup_area(chunk_area, 40, 27);
+    let area = popup_area(chunk_area, 40, 43);
     frame.render_widget(Clear, area);
     frame.render_widget(list, area);
 }
+
+fn information_render(frame: &mut Frame, chunk_area: Rect) {
+    let block = Block::bordered()
+        .padding(Padding::uniform(1))
+        .border_style(Color::White)
+        .title_style(Color::Yellow)
+        .title(Line::from("Information").centered()).cyan()
+        .title_bottom(Line::from("Back(tab)").centered());
+
+    let list = List::new(OPTIONS)
+        .block(block).bold().white();
+
+    let area = popup_area(chunk_area, 40, 43);
+    frame.render_widget(Clear, area);
+    frame.render_widget(list, area);
+}
+
+
+
 
 
