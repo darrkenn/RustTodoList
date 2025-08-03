@@ -19,6 +19,4 @@ cargo build
 cargo run
 ````
 ## Requirements
-- Must have Rust installed. 
-    - If on windows use [rustup](https://rustup.rs/).
-    - If on linux use your systems package manager.
+Rust
